@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="selenium-with-docker">
+    <test name="sample-test">
+        <classes>
+            <class name="com.newtours.tests.BookFlightTest"/>
+        </classes>
+    </test>
+</suite>
