@@ -1,6 +1,8 @@
 package com.parent;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterTest;
@@ -18,9 +20,24 @@ public class BaseTest {
         String host = "localhost";
         DesiredCapabilities dc = DesiredCapabilities.chrome();
 
-        if (System.getProperty("BROWSER") != null && System.getProperty("BROWSER").equalsIgnoreCase("firefox")) {
+        if (System.getProperty("BROWSER") != null
+                && System.getProperty("BROWSER").equalsIgnoreCase("firefox")) {
             dc = DesiredCapabilities.firefox();
         }
+
+        /*if (System.getProperty("BROWSER") != null
+                && System.getProperty("BROWSER").equalsIgnoreCase("chrome")) {
+            // setup the chromedriver using WebDriverManager
+            WebDriverManager.chromedriver().setup();
+
+            //Create Chrome Options
+            ChromeOptions option = new ChromeOptions();
+            option.addArguments("--test-type");
+            option.addArguments("--disable-popup-blocking");
+            dc = DesiredCapabilities.chrome();
+            dc.setJavascriptEnabled(true);
+            option.setCapability(ChromeOptions.CAPABILITY, option);
+        }*/
 
         if (System.getProperty("HUB_HOST") != null) {
             host = System.getProperty("HUB_HOST");
