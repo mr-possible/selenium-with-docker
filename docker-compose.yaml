@@ -6,12 +6,14 @@ services:
       - "4444:4444"
   chrome:
     image: selenium/node-chrome:3.14
+    shm_size: '1gb'
     environment:
       - HUB_HOST=hub
     depends_on:
       - hub
   firefox:
     image: selenium/node-firefox:3.14
+    shm_size: '1gb'
     environment:
       - HUB_HOST=hub
     depends_on:
