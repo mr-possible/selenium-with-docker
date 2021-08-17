@@ -1,5 +1,8 @@
 FROM openjdk:8-jre-alpine
 
+# Install utilities that you want.
+RUN apk add curl jq
+
 #Workspace
 WORKDIR /usr/share/sambhav_work
 
@@ -12,5 +15,8 @@ ADD target/libs                         libs
 #Add suite files
 ADD testng-suite.xml                    testng-suite.xml
 
+# Add your healthcheck script
+ADD healthcheck.sh                      healthcheck.sh
+
 # Expecting browser , hub-host and module to run.
-ENTRYPOINT  java -cp "selenium-docker.jar:selenium-docker-tests.jar:libs/*" -DBROWSER=$BROWSER -DHUB_HOST=$HUB_HOST org.testng.TestNG $MODULE
+ENTRYPOINT sh healthcheck.sh
