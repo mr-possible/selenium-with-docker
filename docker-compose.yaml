@@ -18,3 +18,14 @@ services:
       - HUB_HOST=hub
     depends_on:
       - hub
+  my-suite:
+    image: samd6197/selenium-docker
+    environment:
+      - BROWSER=$BROWSER
+      - MODULE=$MODULE
+      - HUB_HOST=hub
+    depends_on:
+      - chrome
+      - firefox
+    volumes:
+      - ./run-results:/usr/share/sambhav_work/test_output
