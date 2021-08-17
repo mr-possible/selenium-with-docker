@@ -21,8 +21,8 @@ services:
   my-suite:
     image: samd6197/selenium-docker
     environment:
-      - BROWSER=$BROWSER
-      - MODULE=$MODULE
+      - BROWSER=${BROWSER}
+      - MODULE=${MODULE}
       - HUB_HOST=hub
     depends_on:
       - chrome
