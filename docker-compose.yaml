@@ -28,4 +28,4 @@ services:
       - chrome
       - firefox
     volumes:
-      - ./run-results:/usr/share/sambhav_work/test_output
+      - ./run-results:/usr/share/sambhav_work/test-output
