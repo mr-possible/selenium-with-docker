@@ -1,0 +1,11 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level [%0.5t] %cyan(%-10.20logger{30}) : %m%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.asynchttpclient.netty.handler.WebSocketHandler" level="OFF"/>
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
