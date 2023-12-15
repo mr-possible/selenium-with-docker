@@ -1,31 +1,28 @@
 version: "3"
 services:
   hub:
-    image: selenium/hub:3.14
+    image: seleniarm/hub:4.10
     ports:
-      - "4444:4444"
+      - 4444:4444
   chrome:
-    image: selenium/node-chrome:3.14
-    shm_size: '1gb'
-    environment:
-      - HUB_HOST=hub
+    image: seleniarm/node-chromium:4.10
+    shm_size: '2g'
     depends_on:
       - hub
+    deploy:
+      replicas: 3
+    environment:
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
   firefox:
-    image: selenium/node-firefox:3.14
-    shm_size: '1gb'
-    environment:
-      - HUB_HOST=hub
+    image: seleniarm/node-firefox:4.10
+    shm_size: '2g'
     depends_on:
       - hub
-  my-suite:
-    image: samd6197/selenium-docker
+    deploy:
+      replicas: 3
     environment:
-      - BROWSER=${BROWSER}
-      - MODULE=${MODULE}
-      - HUB_HOST=hub
-    depends_on:
-      - chrome
-      - firefox
-    volumes:
-      - ./run-results:/usr/share/sambhav_work/test-output
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
