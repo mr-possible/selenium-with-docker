@@ -42,9 +42,9 @@ incorporate the same in Test Automation space.
 <h3> How To Run ?</h3>
     - On your terminal, please run the following command: 
         
-        docker compose up
+        docker-compose up
 
 <h3>Prerequisites</h3>
     
 - Docker needs to be installed on your machine.
-- Java 8 or 8+ required.
+- Java 17 or 17+ required.
