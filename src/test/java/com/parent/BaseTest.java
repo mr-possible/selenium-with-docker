@@ -1,5 +1,6 @@
 package com.parent;
 
+import com.newtours.listeners.TestListener;
 import com.newtours.utils.Config;
 import com.newtours.utils.Constants;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -15,10 +16,12 @@ import org.testng.ITestContext;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Listeners;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@Listeners({TestListener.class})
 public class BaseTest {
     public static final Logger log = LoggerFactory.getLogger(BaseTest.class);
     protected WebDriver driver;
