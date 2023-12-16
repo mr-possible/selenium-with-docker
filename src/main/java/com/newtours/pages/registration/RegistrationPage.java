@@ -43,8 +43,8 @@ public class RegistrationPage {
     @FindBy(id = "register-btn")
     private WebElement registerButton;
 
-    public void goTo(){
-        this.driver.get("https://vins-udemy.s3.amazonaws.com/docker/docker-book-flight.html");
+    public void goTo(String link){
+        this.driver.get(link);
     }
 
     public void enterFirstName(String val) {

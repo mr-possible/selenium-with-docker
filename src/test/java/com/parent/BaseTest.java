@@ -1,52 +1,57 @@
 package com.parent;
 
+import com.newtours.utils.Config;
+import com.newtours.utils.Constants;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class BaseTest {
+    public static final Logger log = LoggerFactory.getLogger(BaseTest.class);
     protected WebDriver driver;
 
+    @BeforeSuite
+    public void testParamsSetup() {
+        Config.init();
+    }
+
     @BeforeTest
-    public void setupDriver() throws MalformedURLException {
-        // default values
-        String host = "localhost";
-        DesiredCapabilities dc;
+    public void setupDriver(ITestContext ctx) throws MalformedURLException {
+        this.driver = Boolean.parseBoolean(Config.get(Constants.GRID_ENABLED)) ? getRemoteDriver() : getLocalDriver();
+        ctx.setAttribute("driver", this.driver);
+    }
 
-        if (System.getProperty("BROWSER") != null
-                && System.getProperty("BROWSER").equalsIgnoreCase("firefox")) {
-            dc = DesiredCapabilities.firefox();
-        }else{
-            dc = DesiredCapabilities.chrome();
+    private WebDriver getRemoteDriver() throws MalformedURLException {
+        Capabilities capabilities = new ChromeOptions();
+        if (Constants.BROWSER.equalsIgnoreCase(Config.get(Constants.BROWSER))) {
+            capabilities = new FirefoxOptions();
         }
 
-        /*if (System.getProperty("BROWSER") != null
-                && System.getProperty("BROWSER").equalsIgnoreCase("chrome")) {
-            // setup the chromedriver using WebDriverManager
-            WebDriverManager.chromedriver().setup();
+        String urlFormat = Config.get(Constants.GRID_URL_FORMAT);
+        String hub_host = Config.get(Constants.GRID_HUB_HOST);
+        String gridUrl = String.format(urlFormat, hub_host);
 
-            //Create Chrome Options
-            ChromeOptions option = new ChromeOptions();
-            option.addArguments("--test-type");
-            option.addArguments("--disable-popup-blocking");
-            dc = DesiredCapabilities.chrome();
-            dc.setJavascriptEnabled(true);
-            option.setCapability(ChromeOptions.CAPABILITY, option);
-        }*/
+        log.info("Grid URL => {}", gridUrl);
 
-        if (System.getProperty("HUB_HOST") != null) {
-            host = System.getProperty("HUB_HOST");
-        }
+        return new RemoteWebDriver(new URL(gridUrl), capabilities);
+    }
 
-        String completeURL = "http://" + host + ":4444/wd/hub";
-        this.driver = new RemoteWebDriver(new URL(completeURL), dc);
+    private WebDriver getLocalDriver() {
+        WebDriverManager.chromedriver().setup();
+        return new ChromeDriver();
     }
 
     @AfterTest
