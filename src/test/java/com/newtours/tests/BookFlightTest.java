@@ -6,6 +6,8 @@ import com.newtours.pages.flightpreferences.Oneway;
 import com.newtours.pages.iternary.FlightItineryPage;
 import com.newtours.pages.registration.RegistrationConfirmationPage;
 import com.newtours.pages.registration.RegistrationPage;
+import com.newtours.utils.Config;
+import com.newtours.utils.Constants;
 import com.parent.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -15,7 +17,7 @@ public class BookFlightTest extends BaseTest {
     @Test
     public void registrationPageTest() {
         RegistrationPage registrationPage = new RegistrationPage(driver);
-        registrationPage.goTo();
+        registrationPage.goTo(Config.get(Constants.APP_URL));
         registrationPage.enterFirstName("Sam");
         registrationPage.enterLastName("Morris");
         registrationPage.enterUsername("sam");
