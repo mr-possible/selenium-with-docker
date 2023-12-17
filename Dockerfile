@@ -1,18 +1,14 @@
 FROM bellsoft/liberica-openjdk-alpine:17.0.9
 
+# Install curl & jq which are used to hit grid-status-check endpoint
+RUN apk add curl jq
+
 # Workspace
 WORKDIR /home/selenium-docker
 
 # Add required files
-ADD target/docker-resources ./
-
-# Environment Variables
-# HUB_HOST
-# BROWSER
-# TEST_SUITE
+ADD target/docker-resources     ./
+ADD healthcheck.sh              healthcheck.sh
 
 # Run the first command once the container starts
-ENTRYPOINT java -cp "libs/*" \
-           -Dbrowser=${BROWSER} -Dselenium.grid.hubHost=${HUB_HOST} \
-           org.testng.TestNG suites/${TEST_SUITE}
-
+ENTRYPOINT sh healthcheck.sh
