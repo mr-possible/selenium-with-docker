@@ -1,22 +1,18 @@
-FROM openjdk:8-jre-alpine
-
-# Install utilities that you want.
-RUN apk add curl jq
+FROM bellsoft/liberica-openjdk-alpine:17.0.9
 
 # Workspace
-WORKDIR /usr/share/sambhav_work
+WORKDIR /home/selenium-docker
 
-# Add .jars under target location from host into this image
-ADD target/selenium-docker.jar /usr/share/sambhav_work/selenium-docker.jar
-ADD target/selenium-docker-tests.jar /usr/share/sambhav_work/selenium-docker-tests.jar
-ADD target/libs /usr/share/sambhav_work/libs
+# Add required files
+ADD target/docker-resources ./
 
-# In case of any other dependency like .csv/.json/.xls => please add that here as well
-# Add suite files
-ADD test-suite.xml /usr/share/sambhav_work/testng-suite.xml
+# Environment Variables
+# HUB_HOST
+# BROWSER
+# TEST_SUITE
 
-# Add your healthcheck script
-ADD healthcheck.sh /usr/share/sambhav_work/healthcheck.sh
+# Run the first command once the container starts
+ENTRYPOINT java -cp "libs/*" \
+           -Dbrowser=${BROWSER} -Dselenium.grid.hubHost=${HUB_HOST} \
+           org.testng.TestNG suites/${TEST_SUITE}
 
-# Expecting browser, hub-host, and module to run.
-ENTRYPOINT sh healthcheck.sh
