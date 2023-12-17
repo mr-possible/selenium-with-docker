@@ -1,18 +1,22 @@
-#!/usr/bin/env bash
-# Environment Variables
-# HUB_HOST
-# BROWSER
-# MODULE
+#!/bin/bash
 
-echo "Checking if hub $HUB_HOST is ready . . ."
 
-while [ "$( curl -s http://$HUB_HOST:4444/wd/hub/status | jq -r .value.ready )" != "true" ]
+# Do not start the tests immediately. Hub has to be ready with browser nodes
+echo "Checking if hub is ready..!"
+count=0
+while [ "$( curl -s http://"${HUB_HOST:-hub}":4444/status | jq -r .value.ready )" != "true" ]
 do
-  echo "Waiting . . ."
-	sleep 1
+  count=$((count+1))
+  echo "Attempt: ${count}"
+  sleep 1
 done
 
-echo "$HUB_HOST is ready! Proceeding with user tasks . . ."
+echo "Selenium Grid is up and running. Continuing..."
 
-# start the java command
-java -cp selenium-docker.jar:selenium-docker-tests.jar:libs/* -DHUB_HOST=$HUB_HOST -DBROWSER=$BROWSER org.testng.TestNG $MODULE
+# Start the java command
+java -cp 'libs/*' \
+     -Dselenium.grid.enabled=true \
+     -Dselenium.grid.hubHost="${HUB_HOST:-hub}" \
+     -Dbrowser="${BROWSER:-chrome}" \
+     org.testng.TestNG \
+     test-suites/"${TEST_SUITE}"
