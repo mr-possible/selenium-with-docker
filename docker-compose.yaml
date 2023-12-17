@@ -26,3 +26,14 @@ services:
       - SE_EVENT_BUS_HOST=hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  my-test-suite:
+    image: samd6197/selenium-docker
+    depends_on:
+      - hub
+    environment:
+      - BROWSER=chrome
+      - HUB_HOST=hub
+      - TEST_SUITE=test-suite.xml
+    # Volume Mapping => [ container_path : host_path ] below
+    volumes:
+      - ./output/:/home/selenium-docker/test-output
